@@ -4,8 +4,9 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,6 @@ import java.util.Date;
 @Service
 public class JwtTokenService {
 
-    private static final long JWT_TOKEN_VALIDITY = 1000*60*60*24*30; //30 days
     private final Algorithm hmac512;
     private final JWTVerifier verifier;
 
@@ -32,7 +32,6 @@ public class JwtTokenService {
         return JWT.create()
                 .withSubject(userDetails.getUsername())
                 .withExpiresAt(
-                        //new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY)
                         cal.getTime()
                 )
                 .sign(this.hmac512);
@@ -42,8 +41,8 @@ public class JwtTokenService {
         try {
             return verifier.verify(token).getSubject();
         } catch (final JWTVerificationException verificationEx) {
-            System.out.println("OOPS");
-            System.out.println(verificationEx.getMessage());
+            Logger logger = LoggerFactory.getLogger(JwtTokenService.class);
+            logger.warn("Token verification failed: " + verificationEx.getMessage());
             return null;
         }
     }

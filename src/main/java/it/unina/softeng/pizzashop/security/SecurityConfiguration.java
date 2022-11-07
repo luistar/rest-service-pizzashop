@@ -8,13 +8,11 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.servlet.Filter;
 
 @Configuration
 @EnableWebSecurity
@@ -22,11 +20,6 @@ public class SecurityConfiguration {
 
     @Autowired
     JwtRequestFilter jwtRequestFilter;
-//
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        return new JwtUserDetailsService();
-//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -40,6 +33,7 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain configure(final HttpSecurity http) throws Exception {
+        //uncomment to enable security
         return http.cors().and()
                 .csrf().disable()
                 .authorizeRequests().
@@ -48,5 +42,10 @@ public class SecurityConfiguration {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+//        return http.cors().and()
+//                .csrf().disable()
+//                .authorizeRequests().anyRequest().permitAll().and()
+//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+//                .build();
     }
 }
