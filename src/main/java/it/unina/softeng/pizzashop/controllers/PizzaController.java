@@ -29,15 +29,13 @@ public class PizzaController {
      */
     @GetMapping("/{id}")
     Pizza getById(@PathVariable int id){
-        return pizzaDAO.getById(id);
-        /*
+        // return pizzaDAO.getById(id);
         //properly return a 404 when not found
         try {
             return pizzaDAO.getById(id);
         } catch (NoSuchElementException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        */
     }
 
     @PostMapping("/")
@@ -52,7 +50,7 @@ public class PizzaController {
     }
 
     @DeleteMapping("/{id}")
-    void createOrUpdatePizza(@PathVariable int id){
+    void deletePizza(@PathVariable int id){
         pizzaDAO.deleteById(id);
     }
 }
